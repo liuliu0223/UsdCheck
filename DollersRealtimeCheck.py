@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 
 # 目标网页的URL
 url = 'https://www.5waihui.com/'
+logFile = 'log.txt'
 
 # 发送HTTP请求以获取网页内容
 response = requests.get(url)
@@ -18,9 +19,9 @@ soup = BeautifulSoup(web_content, 'html.parser')
 table = soup.find('table')
 rows = table.find_all('tr')
 
-today = datetime.datetime.today().strftime("%Y-%m-%d")
+today = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
 print(f'日期：{today}')
-
+text = ""
 if len(rows)<0:
     print(f'没有外币数据！')
 else:
@@ -30,12 +31,16 @@ else:
         usd_rates = rows[it2].find_all('td')
         # 提取并打印美元的现汇买入价和现汇卖出价
         it3 = 0
+
         while it3 < len(usd_rates):
             cashtitle_name = usd_titles[it3].get_text()
             cashs = usd_rates[0].get_text()
             if cashs.find('美元') > -1:
                 usd_buy_rate = usd_rates[it3].get_text()
                 print(f"{cashtitle_name}: {usd_buy_rate}")
+                text += cashtitle_name + ':' + usd_buy_rate + '\n'
             it3 += 1
         it2 += 1
 
+with open(logFile, 'a', encoding='utf-8') as file:
+    file.write(f"日期：{today}\n{text}")
