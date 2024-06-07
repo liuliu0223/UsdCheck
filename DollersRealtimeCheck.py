@@ -6,8 +6,8 @@ from bs4 import BeautifulSoup
 # 目标网页的URL
 url = 'https://www.5waihui.com/'
 logFile = 'log.txt'
-wholepath = 'C:\\Users\\user\\Desktop\\APP\\log.txt'
-print(f"路径名称：{os.path.dirname(wholepath)}\n")
+wholepath = 'C:\\Users\\user\\Desktop\\APP'
+
 # 发送HTTP请求以获取网页内容
 response = requests.get(url)
 web_content = response.content
@@ -42,6 +42,9 @@ else:
                 text += cashtitle_name + ':' + usd_buy_rate + '\n'
             it3 += 1
         it2 += 1
+
+wholepath += '\\' + logFile
+print(f"路径名称：{wholepath}\n")
 with open(wholepath, 'r', encoding='utf-8') as file:
     original_content = file.read()
     file.close()
@@ -50,5 +53,5 @@ new_content = text + original_content
 
 os.chmod(wholepath, 0o666)
 with open(wholepath, 'w', encoding='utf-8') as file:
-    file.write(f"\n日期：{today}\n{new_content}")
+    file.write(f"日期：{today}\n{new_content}\n")
     file.close()
